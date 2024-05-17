@@ -30,12 +30,23 @@ export class BarChartComponent implements OnInit {
     this.inicializarChart();
 
     //Nos suscribimos al observable de tipo BehaviorSubject y cuando este emita un valor, recibiremos una notificación con el nuevo valor.
-    this.gestionServiceApi.datos$.subscribe((datos) => {
+    /*this.gestionServiceApi.datos$.subscribe((datos) => {
       if (datos != undefined) {
         this.actualizarValoresChart(datos.categoria, datos.totalResults);
         this.actualizarChart();
       }
-    });
+    });*/
+    //Nos suscribimos al observable de tipo BehaviorSubject solo si datos$ está definido y no es nulo
+    if (this.gestionServiceApi && this.gestionServiceApi.datos$) {
+      this.gestionServiceApi.datos$.subscribe((datos) => {
+        if (datos != undefined) {
+          this.actualizarValoresChart(datos.categoria, datos.totalResults);
+          this.actualizarChart();
+        }
+      });
+    } else {
+      console.error('El observable datos$ no está definido en gestionServiceApi');
+    }
   }
 
   //Cuando salgamos del segmento se destruirá el gráfico
